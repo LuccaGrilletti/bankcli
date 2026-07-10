@@ -1,6 +1,8 @@
 package com.lucca.bankcli.model;
 
 import java.util.UUID;
+
+import com.lucca.bankcli.exception.*;
 import com.lucca.bankcli.util.CpfValidator;
 
 /** 1 Client -> N Accounts, which implies separation of objects
@@ -18,9 +20,9 @@ public class Client {
     public Client(String firstName, String lastName, String cpf, String email) {
 
         if (firstName == null || firstName.isBlank() || lastName == null || lastName.isBlank()) {
-            throw new IllegalArgumentException("Full name required");
+            throw new InvalidDataException("First and last name required");
         }
-        if (cpf == null || cpf.isBlank() || !CpfValidator.isValid(cpf)) throw new IllegalArgumentException("Invalid CPF");
+        if (cpf == null || cpf.isBlank() || !CpfValidator.isValid(cpf)) throw new InvalidCpfException("Invalid CPF");
 
         this.firstName = firstName;
         this.lastName = lastName;

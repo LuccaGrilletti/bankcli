@@ -6,6 +6,7 @@ import com.lucca.bankcli.repository.ClientRepository;
 import com.lucca.bankcli.repository.AccountRepository;
 
 import java.math.BigDecimal;
+import com.lucca.bankcli.exception.*;
 
 public class AccountService {
     private final ClientRepository clientRepository;
@@ -18,7 +19,7 @@ public class AccountService {
 
     public Account createAccount(String cpf, BigDecimal initialBalance) {
         Client client = clientRepository.getClientByCpf(cpf)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found"));
 
         Account account = new Account(initialBalance, client.getClientId());
         accountRepository.insertAccount(account);

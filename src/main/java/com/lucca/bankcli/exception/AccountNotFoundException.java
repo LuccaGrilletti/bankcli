@@ -1,4 +1,7 @@
 package com.lucca.bankcli.exception;
 
-public class AccountNotFoundException {
+public class AccountNotFoundException extends BankCliException {
+    public AccountNotFoundException(String message) {
+        super(message);
+    }
 }

@@ -3,6 +3,7 @@ package com.lucca.bankcli.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import com.lucca.bankcli.exception.*;
 
 /**
  * Representa uma conta bancária
@@ -21,11 +22,11 @@ public class Account {
     public Account(BigDecimal initialBalance, String clientId) {
 
         if (clientId == null || clientId.isEmpty()) {
-            throw new IllegalArgumentException("Client ID cannot be null or empty");
+            throw new InvalidDataException("Client ID cannot be null or empty");
         }
 
         if (initialBalance == null || initialBalance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("initialBalance cannot be negative");
+            throw new InvalidDataException("initialBalance cannot be negative");
         }
 
         this.id = UUID.randomUUID().toString();
@@ -48,18 +49,19 @@ public class Account {
 
     public void deposit(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount cannot be negative or 0");
+            throw new InvalidDataException("Amount cannot be negative or 0");
         }
         this.balance = balance.add(amount);
     }
 
     public void withdraw(BigDecimal amount) {
+
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount cannot be negative 0");
+            throw new InvalidDataException("Amount cannot be negative or 0");
         }
 
         if (amount.compareTo(this.balance) > 0) {
-            throw new IllegalStateException("Balance cannot be greater than current balance");
+            throw new InsufficientFundsException("Insufficient funds!");
         }
 
         this.balance = balance.subtract(amount);
