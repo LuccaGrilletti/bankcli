@@ -15,10 +15,12 @@ public class InMemoryClientRepository implements ClientRepository {
         clients.put(client.getClientId(), client);
     }
 
-    /** Get a client by ID */
+    /**
+     * Get a client by ID
+     */
     @Override
-    public Client getClient(String id) {
-        return clients.get(id);
+    public Optional<Client> getClient(String id) {
+        return Optional.ofNullable(clients.get(id));
     }
 
     /** Get all clients */

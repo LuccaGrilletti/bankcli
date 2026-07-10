@@ -15,8 +15,8 @@ public class InMemoryAccountRepository implements AccountRepository {
 
     /** Get accounts with ID as String */
     @Override
-    public Account getAccount(String id) {
-        return accounts.get(id);
+    public Optional<Account> getAccount(String id) {
+        return Optional.ofNullable(accounts.get(id));
     }
 
     /** Delete accounts with ID as String*/
@@ -35,6 +35,13 @@ public class InMemoryAccountRepository implements AccountRepository {
     @Override
     public List<Account> getAllAccounts() {
         return new ArrayList<>(accounts.values());
+    }
+
+    @Override
+    public List<Account> getAccountsByClientId(String clientId) {
+        return accounts.values().stream()
+                .filter(acc -> acc.getClientId().equals(clientId))
+                .toList();
     }
 
 }

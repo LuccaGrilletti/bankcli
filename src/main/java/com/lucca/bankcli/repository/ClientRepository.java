@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface ClientRepository {
     void insertClient(Client client);
-    Client getClient(String id);
+    Optional<Client> getClient(String id);
     List<Client> getAllClients();
     void updateClient(Client client);
     void deleteClient(String id);

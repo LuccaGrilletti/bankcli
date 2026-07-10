@@ -10,11 +10,11 @@ import com.lucca.bankcli.util.CpfValidator;
 
 public class Client {
 
-    private final String firstName;
-    private final String lastName;
-    private final String fullName;
+    private String firstName;
+    private String lastName;
+    private String fullName;
     private final String cpf;
-    private final String email;
+    private String email;
     private final UUID clientId;
 
     public Client(String firstName, String lastName, String cpf, String email) {
@@ -54,5 +54,15 @@ public class Client {
 
     public String getClientId() {
         return clientId.toString();
+    }
+
+    public void updateProfile(String firstName, String lastName, String email) {
+        if (firstName == null || firstName.isBlank() || lastName == null || lastName.isBlank()) {
+            throw new InvalidDataException("Full name required");
+        }
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fullName = firstName + " " + lastName;
+        this.email = email;
     }
 }

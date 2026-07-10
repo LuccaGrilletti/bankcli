@@ -39,6 +39,10 @@ public class Account {
         return id;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
     public BigDecimal getBalance() {
         return balance;
     }
