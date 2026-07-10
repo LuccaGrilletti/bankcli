@@ -3,42 +3,48 @@ package com.lucca.bankcli.repository;
 import com.lucca.bankcli.model.Client;
 
 import java.util.*;
+import java.util.Optional;
 
-public class InMemoryClientRepository {
+public class InMemoryClientRepository implements ClientRepository {
 
     private final Map<String, Client> clients = new HashMap<>();
 
     /** Insert a client */
+    @Override
     public void insertClient(Client client) {
         clients.put(client.getClientId(), client);
     }
 
     /** Get a client by ID */
+    @Override
     public Client getClient(String id) {
         return clients.get(id);
     }
 
     /** Get all clients */
+    @Override
     public List<Client> getAllClients() {
         return new ArrayList<>(clients.values());
     }
 
     /** Update a client */
+    @Override
     public void updateClient(Client client) {
         clients.put(client.getClientId(), client);
     }
 
     /** Delete a client */
+    @Override
     public void deleteClient(String id) {
         clients.remove(id);
     }
 
     /** Search a client by CPF */
-    public Client getClientByCpf(String cpf) {
-        return clients.values().stream()                        // NTS: .values -> valores do mapa / .stream -> percorre registros / == for ( Client c : clients.values())
-                .filter(c -> c.getCpf().equals(cpf))     //  == if (clients.getCpf().equals(cpf)
-                .findFirst()                                   //  caso ache, retorna
-                .orElse(null);                           //  caso não, retorna null
+    @Override
+    public Optional<Client> getClientByCpf(String cpf) {
+        return clients.values().stream()
+                .filter(c -> c.getCpf().equals(cpf))
+                .findFirst();
     }
 
 }
