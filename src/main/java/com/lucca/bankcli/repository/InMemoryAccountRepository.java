@@ -5,11 +5,11 @@ import java.util.*;
 
 public class InMemoryAccountRepository {
 
-    private Map<String, Account> accounts = new HashMap<>();
+    private final Map<String, Account> accounts = new HashMap<>();
 
     /** Insert accounts*/
     public void insertAccount(Account acc) {
-        accounts.put(acc.getId(), acc);
+        accounts.put(acc.getAccountId(), acc);
     }
 
     /** Get accounts with ID as String */
@@ -24,7 +24,7 @@ public class InMemoryAccountRepository {
 
     /** Update accounts with ID as String*/
     public void updateAccount(Account acc) {
-        accounts.put(acc.getId(), acc);
+        accounts.put(acc.getAccountId(), acc);
     }
 
     /** List all accounts */

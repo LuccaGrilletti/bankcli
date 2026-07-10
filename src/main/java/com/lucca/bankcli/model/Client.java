@@ -3,30 +3,42 @@ package com.lucca.bankcli.model;
 import java.util.UUID;
 import com.lucca.bankcli.util.CpfValidator;
 
-/** 1 Client -> N Accounts, wich implies separation of objects
+/** 1 Client -> N Accounts, which implies separation of objects
  * */
 
 public class Client {
 
-    private final String name;
+    private final String firstName;
+    private final String lastName;
+    private final String fullName;
     private final String cpf;
     private final String email;
     private final UUID clientId;
 
-    public Client(String name, String cpf, String email) {
+    public Client(String firstName, String lastName, String cpf, String email) {
 
-        if (name == null || name.isBlank()) throw new IllegalArgumentException("Invalid name");
-
+        if (firstName == null || firstName.isBlank() || lastName == null || lastName.isBlank()) {
+            throw new IllegalArgumentException("Full name required");
+        }
         if (cpf == null || cpf.isBlank() || !CpfValidator.isValid(cpf)) throw new IllegalArgumentException("Invalid CPF");
 
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fullName = firstName + " " + lastName;
         this.cpf = cpf;
         this.email = email;
         this.clientId = UUID.randomUUID();
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+    public String getLastName() {
+        return lastName;
     }
 
     public String getCpf() {
@@ -37,7 +49,7 @@ public class Client {
         return email;
     }
 
-    public UUID getClientId() {
-        return clientId;
+    public String getClientId() {
+        return clientId.toString();
     }
 }

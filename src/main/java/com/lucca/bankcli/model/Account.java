@@ -18,11 +18,13 @@ public class Account {
 
     private final String id;
     private final String ownerName;
+    private final String clientID;
     private BigDecimal balance;
     private final LocalDateTime createdAt;
     private final String cpf;
 
     public Account(String ownerName, BigDecimal initialBalance, String cpf) {
+
         if (!CpfValidator.isValid(cpf)) {
             throw new IllegalArgumentException("Invalid CPF");
         }
@@ -40,9 +42,12 @@ public class Account {
         this.balance = initialBalance;
         this.createdAt = LocalDateTime.now();
         this.cpf = cpf;
+
+
+        //this.clientID = ;
     }
 
-    public String getId() {
+    public String getAccountId() {
         return id;
     }
 
