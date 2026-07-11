@@ -7,7 +7,6 @@ import com.lucca.bankcli.repository.AccountRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 
 import com.lucca.bankcli.exception.*;
@@ -36,7 +35,7 @@ public class AccountService {
                 .orElseThrow(() -> new AccountNotFoundException("Account not found: " + id));
     }
 
-    public List<Account> getAllAccounts() {
+    public List<Account> listAllAccounts() {
         return accountRepository.getAllAccounts();
     }
 
@@ -49,5 +48,21 @@ public class AccountService {
         }
 
         accountRepository.deleteAccount(id);
+    }
+
+    public Account deposit(String id, BigDecimal amount) {
+        Account account = accountRepository.getAccount(id)
+                .orElseThrow(() -> new AccountNotFoundException("Account not found: " + id));
+        account.deposit(amount);
+        accountRepository.updateAccount(account);
+        return account;
+    }
+
+    public Account withdraw(String id, BigDecimal amount) {
+        Account account = accountRepository.getAccount(id)
+                .orElseThrow(() -> new AccountNotFoundException("Account not found: " + id));
+        account.withdraw(amount);
+        accountRepository.updateAccount(account);
+        return account;
     }
 }

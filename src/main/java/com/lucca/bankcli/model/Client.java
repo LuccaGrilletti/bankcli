@@ -65,4 +65,16 @@ public class Client {
         this.fullName = firstName + " " + lastName;
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", email='" + email + '\'' +
+                ", clientId=" + clientId +
+                '}';
+    }
 }
