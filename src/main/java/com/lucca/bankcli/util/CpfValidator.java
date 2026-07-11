@@ -1,17 +1,21 @@
 package com.lucca.bankcli.util;
 
 /**
- * Validação de CPF baseada no algoritmo oficial de dígitos verificadores
- * (módulo 11). Não verifica se o CPF existe de fato na Receita Federal —
- * só valida o formato e a consistência matemática dos dígitos.
+ * CPF validation based on the official check-digit algorithm (modulo 11).
+ * Does not verify whether the CPF actually exists at the Receita Federal —
+ * it only validates the format and the mathematical consistency of the digits.
  */
 
 public final class CpfValidator {
 
     private CpfValidator() {
-        // classe utilitária: não deve ser instanciada
+        // utility class: not meant to be instantiated
     }
 
+    /**
+     * Checks whether {@code cpf} is a well-formed, mathematically valid CPF.
+     * Accepts any punctuation (dots/dashes are stripped before validation).
+     */
     public static boolean isValid(String cpf) {
         if (cpf == null) {
             return false;
@@ -23,8 +27,8 @@ public final class CpfValidator {
             return false;
         }
 
-        // Rejeita sequências repetidas (111.111.111-11, 000.000.000-00, etc.)
-        // que passariam no cálculo matemático mas são inválidas na prática.
+        // Rejects repeated-digit sequences (111.111.111-11, 000.000.000-00, etc.)
+        // that would pass the mathematical check but are invalid in practice.
         if (digits.chars().distinct().count() == 1) {
             return false;
         }

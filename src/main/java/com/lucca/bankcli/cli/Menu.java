@@ -10,6 +10,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Text-based presentation layer for the application. Reads user input from
+ * the console, dispatches each menu option to a dedicated handler method,
+ * and delegates all business logic to {@link ClientService} and
+ * {@link AccountService}. Every domain error surfaces as a
+ * {@link BankCliException} subtype, which is caught per handler and printed
+ * as a plain message instead of a stack trace.
+ */
 public class Menu {
 
     private final Scanner scanner;
@@ -23,10 +31,11 @@ public class Menu {
         this.scanner = new Scanner(System.in);
     }
 
+    /** Runs the main loop: prints the menu, reads a choice, dispatches it, and repeats until the user quits. */
     public void run() {
         while (running) {
             printMenu();
-            int choice = readIntChoice("Escolha uma opção: ");
+            int choice = readIntChoice("Choose an option: ");
 
             switch (choice) {
                 case 1 -> handleCreateClient();
@@ -43,7 +52,7 @@ public class Menu {
                 case 12 -> handleLogin();
                 case 13 -> handleTransfer();
                 case 14 -> handleQuit();
-                default -> System.out.println("Opção inválida, tente novamente.");
+                default -> System.out.println("Invalid option, try again.");
             }
         }
     }
@@ -51,56 +60,56 @@ public class Menu {
     private void printMenu() {
         System.out.println();
         System.out.println("===== BankCLI =====");
-        System.out.println("--- Clientes ---");
-        System.out.println("1. Criar cliente");
-        System.out.println("2. Buscar cliente (por CPF)");
-        System.out.println("3. Listar clientes");
-        System.out.println("4. Atualizar cliente");
-        System.out.println("5. Excluir cliente");
-        System.out.println("--- Contas ---");
-        System.out.println("6. Criar conta");
-        System.out.println("7. Buscar conta (por ID)");
-        System.out.println("8. Listar contas");
-        System.out.println("9. Excluir conta");
-        System.out.println("--- Movimentação ---");
-        System.out.println("10. Depositar");
-        System.out.println("11. Sacar");
-        System.out.println("--- Outros ---");
-        System.out.println("12. Login (em breve)");
-        System.out.println("13. Transferência entre contas (em breve)");
-        System.out.println("14. Sair");
+        System.out.println("--- Clients ---");
+        System.out.println("1. Create client");
+        System.out.println("2. Search client (by CPF)");
+        System.out.println("3. List clients");
+        System.out.println("4. Update client");
+        System.out.println("5. Delete client");
+        System.out.println("--- Accounts ---");
+        System.out.println("6. Create account");
+        System.out.println("7. Search account (by ID)");
+        System.out.println("8. List accounts");
+        System.out.println("9. Delete account");
+        System.out.println("--- Transactions ---");
+        System.out.println("10. Deposit");
+        System.out.println("11. Withdraw");
+        System.out.println("--- Other ---");
+        System.out.println("12. Login (coming soon)");
+        System.out.println("13. Transfer between accounts (coming soon)");
+        System.out.println("14. Quit");
     }
 
-    // ---- Cliente ----
+    // ---- Client ----
 
     private void handleCreateClient() {
         try {
-            String firstName = readLine("Nome: ");
-            String lastName = readLine("Sobrenome: ");
+            String firstName = readLine("First name: ");
+            String lastName = readLine("Last name: ");
             String cpf = readLine("CPF: ");
             String email = readLine("Email: ");
 
             Client client = clientService.createClient(firstName, lastName, cpf, email);
-            System.out.println("Cliente criado: " + client);
+            System.out.println("Client created: " + client);
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void handleSearchClient() {
         try {
-            String cpf = readLine("CPF do cliente: ");
+            String cpf = readLine("Client CPF: ");
             Client client = clientService.searchClient(cpf);
             System.out.println(client);
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void handleListClients() {
         List<Client> clients = clientService.listAllClients();
         if (clients.isEmpty()) {
-            System.out.println("Nenhum cliente cadastrado.");
+            System.out.println("No clients registered.");
             return;
         }
         for (Client client : clients) {
@@ -110,60 +119,60 @@ public class Menu {
 
     private void handleUpdateClient() {
         try {
-            String cpf = readLine("CPF do cliente a atualizar: ");
+            String cpf = readLine("CPF of the client to update: ");
             Client client = clientService.searchClient(cpf);
 
-            String firstName = readLine("Novo nome: ");
-            String lastName = readLine("Novo sobrenome: ");
-            String email = readLine("Novo email: ");
+            String firstName = readLine("New first name: ");
+            String lastName = readLine("New last name: ");
+            String email = readLine("New email: ");
 
             Client updated = clientService.updateClient(client.getClientId(), firstName, lastName, email);
-            System.out.println("Cliente atualizado: " + updated);
+            System.out.println("Client updated: " + updated);
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void handleDeleteClient() {
         try {
-            String cpf = readLine("CPF do cliente a excluir: ");
+            String cpf = readLine("CPF of the client to delete: ");
             Client client = clientService.searchClient(cpf);
 
             clientService.deleteClient(client.getClientId());
-            System.out.println("Cliente excluído com sucesso.");
+            System.out.println("Client deleted successfully.");
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    // ---- Conta ----
+    // ---- Account ----
 
     private void handleCreateAccount() {
         try {
-            String cpf = readLine("CPF do titular: ");
-            BigDecimal initialBalance = readBigDecimal("Saldo inicial: ");
+            String cpf = readLine("Account holder CPF: ");
+            BigDecimal initialBalance = readBigDecimal("Initial balance: ");
 
             Account account = accountService.createAccount(cpf, initialBalance);
-            System.out.println("Conta criada: " + account);
+            System.out.println("Account created: " + account);
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void handleSearchAccount() {
         try {
-            String id = readLine("ID da conta: ");
+            String id = readLine("Account ID: ");
             Account account = accountService.searchAccount(id);
             System.out.println(account);
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void handleListAccounts() {
         List<Account> accounts = accountService.listAllAccounts();
         if (accounts.isEmpty()) {
-            System.out.println("Nenhuma conta cadastrada.");
+            System.out.println("No accounts registered.");
             return;
         }
         for (Account account : accounts) {
@@ -173,53 +182,53 @@ public class Menu {
 
     private void handleDeleteAccount() {
         try {
-            String id = readLine("ID da conta a excluir: ");
+            String id = readLine("ID of the account to delete: ");
             accountService.deleteAccount(id);
-            System.out.println("Conta excluída com sucesso.");
+            System.out.println("Account deleted successfully.");
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    // ---- Movimentação ----
+    // ---- Transactions ----
 
     private void handleDeposit() {
         try {
-            String id = readLine("ID da conta: ");
-            BigDecimal amount = readBigDecimal("Valor do depósito: ");
+            String id = readLine("Account ID: ");
+            BigDecimal amount = readBigDecimal("Deposit amount: ");
 
             Account account = accountService.deposit(id, amount);
-            System.out.println("Depósito realizado. Novo saldo: " + account.getBalance());
+            System.out.println("Deposit completed. New balance: " + account.getBalance());
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void handleWithdraw() {
         try {
-            String id = readLine("ID da conta: ");
-            BigDecimal amount = readBigDecimal("Valor do saque: ");
+            String id = readLine("Account ID: ");
+            BigDecimal amount = readBigDecimal("Withdrawal amount: ");
 
             Account account = accountService.withdraw(id, amount);
-            System.out.println("Saque realizado. Novo saldo: " + account.getBalance());
+            System.out.println("Withdrawal completed. New balance: " + account.getBalance());
         } catch (BankCliException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     // ---- Placeholders ----
 
     private void handleLogin() {
-        System.out.println("Login: funcionalidade ainda não implementada.");
+        System.out.println("Login: feature not implemented yet.");
     }
 
     private void handleTransfer() {
-        System.out.println("Transferência entre contas: funcionalidade ainda não implementada.");
+        System.out.println("Transfer between accounts: feature not implemented yet.");
     }
 
     private void handleQuit() {
         running = false;
-        System.out.println("Encerrando o BankCLI. Até logo!");
+        System.out.println("Shutting down BankCLI. Goodbye!");
     }
 
     // ---- Helpers ----
@@ -235,7 +244,7 @@ public class Menu {
             try {
                 return Integer.parseInt(input.trim());
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida, digite um número.");
+                System.out.println("Invalid input, please enter a number.");
             }
         }
     }
@@ -246,7 +255,7 @@ public class Menu {
             try {
                 return new BigDecimal(input.trim());
             } catch (NumberFormatException e) {
-                System.out.println("Valor inválido, digite um número (ex: 100.50).");
+                System.out.println("Invalid value, please enter a number (e.g. 100.50).");
             }
         }
     }

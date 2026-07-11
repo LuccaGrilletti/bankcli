@@ -8,6 +8,7 @@ import com.lucca.bankcli.repository.InMemoryClientRepository;
 import com.lucca.bankcli.service.AccountService;
 import com.lucca.bankcli.service.ClientService;
 
+/** Composition root: wires the in-memory repositories and services together and starts the {@link Menu}. */
 public class Main {
     public static void main(String[] args) {
         ClientRepository clientRepository = new InMemoryClientRepository();

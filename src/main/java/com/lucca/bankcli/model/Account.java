@@ -6,10 +6,10 @@ import java.util.UUID;
 import com.lucca.bankcli.exception.*;
 
 /**
- * Representa uma conta bancária
- * Contém apenas dados e regras de validação simples ligadas ao próprio estado
- * da conta — regras de negócio mais complexas (transferência, limites diários)
- * ficam na camada de service, não aqui.
+ * Represents a bank account.
+ * Holds only data and simple validation rules tied to the account's own
+ * state — more complex business rules (transfers, daily limits) belong in
+ * the service layer, not here.
  */
 
 public class Account {
@@ -19,6 +19,11 @@ public class Account {
     private BigDecimal balance;
     private final LocalDateTime createdAt;
 
+    /**
+     * Creates a new account with the given opening balance for the given client.
+     *
+     * @throws InvalidDataException if {@code clientId} is null/empty or {@code initialBalance} is null or negative
+     */
     public Account(BigDecimal initialBalance, String clientId) {
 
         if (clientId == null || clientId.isEmpty()) {
@@ -51,6 +56,11 @@ public class Account {
         return createdAt;
     }
 
+    /**
+     * Adds {@code amount} to the balance.
+     *
+     * @throws InvalidDataException if {@code amount} is null or not positive
+     */
     public void deposit(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidDataException("Amount cannot be negative or 0");
@@ -58,6 +68,12 @@ public class Account {
         this.balance = balance.add(amount);
     }
 
+    /**
+     * Subtracts {@code amount} from the balance.
+     *
+     * @throws InvalidDataException if {@code amount} is null or not positive
+     * @throws InsufficientFundsException if {@code amount} is greater than the current balance
+     */
     public void withdraw(BigDecimal amount) {
 
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -76,4 +92,3 @@ public class Account {
         return "Account{id='%s', clientId='%s', balance='%s', createdAt=%s}".formatted(id, clientId, balance, createdAt);
     }
 }
-

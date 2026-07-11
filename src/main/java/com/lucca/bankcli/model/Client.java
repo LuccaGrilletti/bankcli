@@ -17,6 +17,12 @@ public class Client {
     private String email;
     private final UUID clientId;
 
+    /**
+     * Creates a new client.
+     *
+     * @throws InvalidDataException if the first or last name is null/blank
+     * @throws InvalidCpfException if the CPF is null/blank or fails the check-digit validation
+     */
     public Client(String firstName, String lastName, String cpf, String email) {
 
         if (firstName == null || firstName.isBlank() || lastName == null || lastName.isBlank()) {
@@ -56,9 +62,15 @@ public class Client {
         return clientId.toString();
     }
 
+    /**
+     * Updates the client's first name, last name and email in place.
+     * CPF is immutable and cannot be changed through this method.
+     *
+     * @throws InvalidDataException if the first or last name is null/blank
+     */
     public void updateProfile(String firstName, String lastName, String email) {
         if (firstName == null || firstName.isBlank() || lastName == null || lastName.isBlank()) {
-            throw new InvalidDataException("Full name required");
+            throw new InvalidDataException("First and last name required");
         }
         this.firstName = firstName;
         this.lastName = lastName;
